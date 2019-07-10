@@ -163,6 +163,12 @@ hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 
 先pull 下来，然后push
 
+# git配置信息查看
+
+git config --global -l 查看设置的用户名和邮箱信息
+
+
+
 # 作业
 
 1.git命令
@@ -180,8 +186,3 @@ https://blog.51cto.com/wangfeng7399/2352669
 https://blog.51cto.com/wangfeng7399/2339556
 
 贡献代码
-
-
-
-
-
