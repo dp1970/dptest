@@ -60,11 +60,11 @@ git reset --hard hash值
 
 git reflog 查看所有的提交记录
 
-git diff  对比本地仓库和工作区的区别
+git diff （可以写单独的文件名，也可以不写）对比本地仓库和工作区的区别
 
 git diff --cached 对比的本地仓库和缓存区的区别
 
-git checkout 将工作区的内容回退到最近一次提交的地方
+git checkout 文件名 将工作区的内容回退到最近一次提交的地方
 
 git reset HEAD 文件 将缓存区的文件回退到工作区，不会覆盖工作区的内容
 
