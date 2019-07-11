@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.min.css' %}">
+</head>
+<body>
+
+<h1>管理系统的登录页面</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" class="form-control">
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="code">验证码</label>
+                            <input type="text" id="code" name="code" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <img src="{% url 'code' %}" alt="" id="code_img" style="margin-top: 24px;margin-left:48px;">
+                    </div>
+                </div>
+                <span id="error" class="text-danger"></span>
+                <input type="button" id="login" value="登录" class="btn btn-success pull-right">
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'jquery-3.4.1.js' %}"></script>
+<script src="{% static 'bootstrap-3.3.7-dist/js/bootstrap.min.js' %}"></script>
+
+<script>
+    $('#login').click(function () {
+       var username = $('#username').val();
+       var password = $('#password').val();
+       var code = $('#code').val();
+       var csrf_token = $('[name=csrfmiddlewaretoken]').val();
+
+        $.ajax({
+            url:'{% url "login" %}',
+            type:'post',
+            data:{
+                username:username,
+                password:password,
+                code:code,
+                csrfmiddlewaretoken:csrf_token,
+            },
+            success:function (res) {
+                if (res.code === 100){
+                    var herf = location.search.slice(6);
+                    if (herf){
+                        location.href = herf;
+                    }else{
+                        location.href = '{% url "index" %}';
+                    }
+                }
+                else{
+                    $('#error').text(res.msg);
+                }
+            }
+        })
+    });
+
+    $('#code_img').click(function () {
+        $(this)[0].src += '?';
+    })
+</script>
+
+</body>
+</html>

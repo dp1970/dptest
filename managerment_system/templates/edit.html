@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h3>这是编辑页面</h3>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <form action="" method="post" novalidate>
+                    {% csrf_token %}
+                    {% for field in form_obj %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            <span class="text-danger">{{ field.errors.0 }}</span>
+                        </div>
+                    {% endfor %}
+
+                    <input type="submit" class="btn btn-success pull-right" value="提交">
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

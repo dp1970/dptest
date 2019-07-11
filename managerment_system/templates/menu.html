@@ -1,0 +1,16 @@
+{#{% for foo in menu_list %}#}
+{#    <li class={{ foo.class }}><a href="{{ foo.url }}"><i class="fa fa-link"></i> <span>{{ foo.name }}</span></a></li>#}
+{#{% endfor %}#}
+
+{% for item in menu_dict.values %}
+    <li class="treeview {{ item.class }}" >
+        <a href=""><i class="fa fa-link"></i> <span>{{ item.name }}</span><span class="pull-right-container"></span><i
+                class="fa fa-angle-left pull-right"></i></a>
+        <ul class="treeview-menu" style="display: block">
+            {% for foo in item.children %}
+                <li class="{{ foo.class }}"><a  href="{{ foo.url }}">{{ foo.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </li>
+{% endfor %}
+

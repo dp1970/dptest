@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h3>添加跟进记录</h3>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <form action="" method="post" novalidate>
+                    {% csrf_token %}
+                    {% for follow in follow_obj %}
+                        <div class="form-group">
+                            <lebal for="{{ follow.id_for_label }}">{{ follow.label }}</lebal>
+                            {{ follow }}
+                            <span class="text-danger">{{ follow.errors.0 }}</span>
+                        </div>
+                    {% endfor %}
+                    <input type="submit" value="提交" class="btn btn-success pull-right">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

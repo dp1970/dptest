@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-header">
+                        <div>
+                            <h3 class="box-title">班级信息展示</h3>
+                        </div>
+                        <div>
+                            <br>
+                            <form action="" method="get" class="pull-right" style="width: 400px;display: inline-block">
+                                <select name="condition" id="" class="form-control"
+                                        style="width: 100px;display: inline-block">
+                                    <option value="classname__contains">课程名</option>
+                                    <option value="teacher__contains">teachers</option>
+                                </select>
+                                <input type="text" name="wd" class="form-control"
+                                       style="width: 200px;display: inline-block">
+                                <button class="btn btn-default">搜索</button>
+                            </form>
+                            <a href="{% url 'add' %}" style="margin-left:10px;"
+                               class="btn btn-primary pull-left">添加</a>
+                            <form action="{% url 'customers' %}" method="post">
+                                {% csrf_token %}
+                                <select name="action" id="" class="form-control"
+                                        style="width: 200px;display: inline-block;margin-left: 5px;">
+                                    <option value="batch_delete">批量删除</option>
+                                    <option value="batch_update">批量更新班级信息</option>
+                                </select>
+                                <button class="btn btn-danger" style="vertical-align: 1px;">执行</button>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <table id="example2" class="table table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>
+                                                <input type="checkbox" id="choose">
+                                            </th>
+                                            <th>序号</th>
+                                            <th>课程名称</th>
+                                            <th>学期</th>
+                                            <th>校区</th>
+                                            <th>老师</th>
+                                            <th>学费</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for class in all_class %}
+                                            <tr>
+                                                <td><input type="checkbox" name="selected_id" value="{{ customer.pk }}">
+                                                </td>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ class.course }}</td>
+                                                <td>{{ class.semester }}</td>
+                                                <td>{{ class.campuses }}</td>
+                                                <td>{{ class.teachers__username}}</td>
+                                                <td>{{ class.price }}</td>
+                                                <td><a href="{% url 'edit' class.pk %}"
+                                                       class="btn btn-warning btn-sm">编辑</a>
+                                                    <a href="{% url 'delete' class.pk %}"
+                                                       class="btn btn-danger btn-sm">删除</a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    {{ ret_html|safe }}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $('#choose').click(function () {
+            var status = $(this).prop('checked');
+            $('[name=selected_id]').prop('checked', status);
+        })
+    </script>
+
+{% endblock %}
