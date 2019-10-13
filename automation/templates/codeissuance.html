@@ -1,0 +1,175 @@
+{% extends 'master/base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'zTree_v3/css/zTreeStyle/zTreeStyle.css' %}" type="text/css">
+{% endblock %}
+
+
+{% block body %}
+    <div class="row">
+        <form>
+            <div class="col-md-6">{% csrf_token %}
+                <div class="zTreeDemoBackground left">
+                    <ul id="treeDemo" class="ztree" style="height:320px; overflow: auto"></ul>
+                    <div>
+            <textarea class="form-control" id="command_text" style="height: 100px">
+            </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="bg-black-active color-palette" style="height: 420px; overflow: auto">
+                    当前选中<span id="checkCount" class="highlight_red"></span>台机器
+                    <p> 结果展示:</p>
+                    <pre id="res_command"></pre>
+                </div>
+
+            </div>
+            <div class="text-center">
+                <a href="{% url 'showissuance' %}" type="button" class="btn btn-primary">返回</a>
+                <button type="reset" class="btn btn-warning">清空</button>
+                <button id="push" type="button" class="btn btn-info">提交</button>
+                <p class="text-center"><i id='iconWait'></i></p>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'zTree_v3/js/jquery.ztree.core.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'zTree_v3/js/jquery.ztree.excheck.js' %}"></script>
+    <SCRIPT type="text/javascript" LANGUAGE="JavaScript">
+        <!--
+        var setting = {
+            view: {
+                selectedMulti: false
+            },
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+                onCheck: onCheck
+            }
+        };
+
+        var clearFlag = false;
+
+        function onCheck(e, treeId, treeNode) {
+            count();
+            if (clearFlag) {
+                clearCheckedOldNodes();
+            }
+        }
+
+        function clearCheckedOldNodes() {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                nodes = zTree.getChangeCheckedNodes();
+            for (var i = 0, l = nodes.length; i < l; i++) {
+                nodes[i].checkedOld = nodes[i].checked;
+            }
+        }
+
+        function count() {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                checkCount = zTree.getCheckedNodes(true).length;
+            if (checkCount == 0) {
+                $("#checkCount").text(checkCount);
+            } else {
+                $("#checkCount").text(checkCount - 1)
+            }
+        }
+
+        function createTree() {
+            $.fn.zTree.init($("#treeDemo"), setting, {{ ips|safe }});
+            count();
+            clearFlag = $("#last").attr("checked");
+        }
+
+        $(document).ready(function () {
+            createTree();
+            $("#init").bind("change", createTree);
+            $("#last").bind("change", createTree);
+        });
+        //-->
+        $('#push').click(function () {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                nodes = zTree.getChangeCheckedNodes(),
+                command_text = $('#command_text').val();
+            if (nodes.length == 0) {
+                alert('请选择机器');
+                return
+            }
+            if (command_text.replace(/\s/g, '') == '') {
+                alert('请输入命令');
+                return
+            }
+            node_ips = [];
+            nodes.forEach(function (node) {
+                if (node.pId) {
+                    node_ips.push(node.name)
+                }
+            });
+            $.post({
+                url:{% url 'codeissuance' %},
+                data: {
+                    node_ips: node_ips,
+                    command: command_text,
+                    csrfmiddlewaretoken: $('[name=csrfmiddlewaretoken]').val()
+                },
+                beforeSend: function () { //ajax发送之前做的操作
+                    $('#push').attr('disabled', 'disabled'); //不可点
+                    $('#iconWait').addClass("fa fa-spinner fa-spin") //等待
+                },
+                complete: function () {  //发送完成
+                    $('#push').attr('disabled', null);
+                    $('#iconWait').removeClass("fa fa-spinner fa-spin")
+                },
+                success: function (res) {
+                    msg = res.msg;
+                    res = "";
+                    if (Object.values(msg.ok).length != 0) {
+                        data_ok = msg.ok;
+                        $.each(data_ok, function (k, v) {
+                            res = res + "<font color=yellow>" + k + "| CHANGED | rc=0 >>" + "\n";
+                            res = res + v.command.stdout + "</font>" + "\n";
+                            res = res + "<font color=red>" + v.command.stderr + "</font>" + "\n"
+                        })
+                    }
+                    if (Object.values(msg.skipped).length != 0) {
+                        data_skipped = msg.skipped;
+                        $.each(data_skipped, function (k, v) {
+                            res = res + "<font color=yellow>" + k + "| SUCCESS | rc=0 >>" + "\n";
+                            res = res + v.command.stdout + "</font>" + "\n"
+                        })
+                    }
+                    if (Object.values(msg.failed).length != 0) {
+                        data_failed = msg.failed;
+                        $.each(data_failed, function (k, v) {
+                            res = res + "<font color=red>" + k + "| FAILED | rc=127 >>" + "\n";
+                            res = res + v.command.stderr + "</font>" + "\n";
+                            res = res + "<font color=yellow>" + v.command.stdout + "</font>" + "\n"
+                        })
+                    }
+                    if (Object.values(msg.unreachable).length != 0) {
+                        data_unreachable = msg.unreachable;
+                        $.each(data_unreachable, function (k, v) {
+                            res = res + "<font color=red>" + k + "| FAILED | rc=127 >>" + "\n";
+                            res = res + v.command.msg + "</font>" + "\n"
+                        })
+                    }
+                    $('#res_command').html(res)
+                }
+            })
+        })
+    </SCRIPT>
+    <script>
+        $("#command").addClass("active");
+    </script>
+{% endblock %}

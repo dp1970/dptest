@@ -1,0 +1,63 @@
+{% extends 'master/base.html' %}
+{% block body %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <a href="{% url 'cronadd'  %}" class="btn btn-sm btn-success btn-add">添加计划任务</a>
+                    </h3>
+                    <form action="" method="get" class="pull-right">
+                        <div class="box-tools">
+                            <div class="input-group input-group-sm hidden-xs" style="width: 150px;">
+                                <input type="text" name="table_search" class="form-control pull-right"
+                                       placeholder="Search">
+
+                                <div class="input-group-btn">
+                                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>计划名称</th>
+                            <th>执行机器</th>
+                            <th>执行用户</th>
+                            <th>创建者</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for foo in cron_obj %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ foo.name }}</td>
+                                {% for v in foo.hosts_list.all %}
+                                <td>{{ v.hostip }}</td>
+                                {% endfor %}
+                                <td>{{ foo.user }}</td>
+                                <td>{{ foo.create_user }}</td>
+                                <td><a href="{% url 'cronedit' foo.pk %}" class="btn btn-warning btn-sm btn-edit">编辑</a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $("#cron").addClass("active");
+    </script>
+{% endblock %}

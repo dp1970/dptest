@@ -1,0 +1,60 @@
+{% block body %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>项目名</th>
+                            <th>研发人员</th>
+                            <th>测试人员</th>
+                            <th>运维人员</th>
+                            <th>nginx机器</th>
+                            <th>nginx配置文件</th>
+                            <th>后端主机</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for foo in form_obj %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ foo.name }}</td>
+                                <td>{% for v in foo.dev_user.all %}
+                                    {{ v.name }}
+                                {% endfor %}
+                                </td>
+                                <td>
+                                    {% for v in foo.test_user.all %}
+                                        {{ v.name }}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% for v in foo.ops_user.all %}
+                                        {{ v.name }}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% for v in foo.nginx_host.all %}
+                                        {{ v.hostip }}
+                                    {% endfor %}
+                                </td>
+                                <td>{{ foo.nginx_conf }}</td>
+                                <td>
+                                    {% for v in foo.server_host.all %}
+                                        {{ v.hostip }}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+{% endblock %}

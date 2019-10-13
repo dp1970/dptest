@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.min.css' %}">
+</head>
+<body>
+
+<h1>登录页面</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" class="form-control">
+                </div>
+                <span id="error" class="text-danger"></span>
+                <input type="button" id="login" value="登录" class="btn btn-success pull-right">
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'jquery-3.4.1.js' %}"></script>
+<script src="{% static 'bootstrap-3.3.7-dist/js/bootstrap.min.js' %}"></script>
+
+<script>
+    $('#login').click(function () {
+        var username = $('#username').val();
+        var password = $('#password').val();
+        var csrf_token = $('[name=csrfmiddlewaretoken]').val();
+
+        $.ajax({
+            url: '{% url "login" %}',
+            type: 'post',
+            data: {
+                username: username,
+                password: password,
+                csrfmiddlewaretoken: csrf_token,
+            },
+            success: function (res) {
+                var herf = location.search.slice(6);
+                if (herf) {
+                    location.href = herf;
+                } else {
+                    location.href = '{% url "index" %}';
+                }
+            }
+        })
+    });
+</script>
+
+</body>
+</html>

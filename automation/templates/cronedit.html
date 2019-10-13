@@ -1,0 +1,75 @@
+{% extends 'master/base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'zTree_v3/css/zTreeStyle/zTreeStyle.css' %}" type="text/css">
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="zTreeDemoBackground left">
+                <form id="cronform" class="form-horizontal" novalidate>
+                    {% csrf_token %}
+                    {% for field in form_obj %}
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            <div class="col-sm-9">
+                                {{ field }}
+                            </div>
+                            <span class="text-danger">{{ field.errors.0 }}</span>
+                        </div>
+                    {% endfor %}
+                    <div class="text-center">
+                        <a href="{% url 'showcron' %}" type="button" class="btn btn-primary">返回</a>
+                        <button type="reset" class="btn btn-warning">清空</button>
+                        <button id="push" type="button" class="btn btn-info">提交</button>
+                        <p class="text-center"><i id='iconWait'></i></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="bg-black-active color-palette" style="height: 470px; overflow: auto">
+                <p> 任务名称:</p>
+                <p id="cron_name"></p>
+                <p> 任务:</p>
+                <p id="cron_job"></p>
+                <p> 任务时间:</p>
+                <p id="cron_time"></p>
+                <p> 备注:</p>
+                <p id="cron_note"></p>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        $('select').select2();
+
+        $("#cron").addClass("active");
+
+        $('#cronform').change(
+            function schedule() {
+                time = "" + $('#id_minute').val() + " " + $('#id_hour').val() + " " + $('#id_day').val() + " " + $('#id_month').val() + " " + $('#id_weekday').val();
+                $("#cron_time").text(time);
+                $("#cron_name").text($("#id_name").val());
+                $("#cron_job").text($("#id_job").val());
+                $("#cron_note").text($("#id_note").val());
+            });
+        $('#id_name').attr('readonly',true);
+
+        $('#push').click(function () {
+            var url = "{% url 'cronedit' pk %}";
+            Net.post({
+                    url: url,
+                    data: $('#cronform').serialize(),
+                    go:{% url 'showcron' %}
+                }
+            )
+        });
+    </script>
+{% endblock %}

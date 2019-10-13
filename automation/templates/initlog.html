@@ -1,0 +1,40 @@
+{% block body %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>初始化功能</th>
+                            <th>执行机器</th>
+                            <th>创建者</th>
+                            <th>创建时间</th>
+                            <th>结果</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for foo in form_obj %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ foo.init }}</td>
+                                <td>{% for host in foo.hosts_list.all %}
+                                    {{ host.hostip }}
+                                {% endfor %}
+                                </td>
+                                <td>{{ foo.user }}</td>
+                                <td>{{ foo.create_time|date:'Y-m-d h:i:s' }}</td>
+                                <td>{{ foo.result }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="df60e766-4ee6-40d2-974d-4153e5df7e1b" name="测试linux-107.135" url="http://192.168.107.135">
+        <fileTransfer host="192.168.107.135" port="2188" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="2188" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

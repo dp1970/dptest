@@ -1,0 +1,50 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <form novalidate>
+                {% csrf_token %}
+                {% for field in user_obj %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <p class="wait pull-right" style="margin-top: 10px"></p>
+                <input type="button" class="btn btn-success pull-right push" value="提交">
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('select').select2();
+    $('.push').click(function () {
+        var name = $('#id_name').val();
+        var email = $('#id_email').val();
+        var password = $('#id_password').val();
+        var role = $('#id_role').val();
+        var is_admin = $('#id_is_admin').val();
+        var is_unable = $('#id_is_unable').val();
+        var department = $('#id_department').val();
+        var phone = $('#id_phone').val();
+        var csrf_token = $('[name=csrfmiddlewaretoken]').val();
+        Net.post({
+            'data':
+                {
+                    'name': name,
+                    'email': email,
+                    'password': password,
+                    'role': role,
+                    'is_admin': is_admin,
+                    'is_unable': is_unable,
+                    'department': department,
+                    'phone': phone,
+                    csrfmiddlewaretoken: csrf_token,
+                },
+            'url': "{% url 'useradd' %}",
+            'btn': $('.push'),
+            'icon': $('.wait'),
+            'go': "{% url 'user' %}",
+        })
+    })
+</script>

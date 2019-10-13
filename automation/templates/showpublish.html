@@ -1,0 +1,89 @@
+{% extends 'master/base.html' %}
+{% block body %}
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <div class="btn btn-sm btn-success git-btn">git更新</div>
+                        <div class="btn btn-sm btn-success file-btn">文件更新</div>
+                    </h3>
+                    <form action="" method="get" class="pull-right">
+                        <div class="box-tools">
+                            <div class="input-group input-group-sm hidden-xs" style="width: 150px;">
+                                <input type="text" name="table_search" class="form-control pull-right"
+                                       placeholder="Search">
+
+                                <div class="input-group-btn">
+                                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover text-center">
+                        <tr class="text-center">
+                            <th>序号</th>
+                            <th>项目名称</th>
+                            <th>发布类型</th>
+                            <th>发布人</th>
+                            <th>发布状态</th>
+                            <th>发布时间</th>
+                            <th>操作</th>
+                        </tr>
+                        {% for foo in publish_obj %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ foo.project.name }}</td>
+                                <td>{{ foo.get_type_display }}</td>
+                                <td>{{ foo.user.name }}</td>
+                                <td>{{ foo.get_status_display }}</td>
+                                <td>{{ foo.create_time|date:"Y-m-d h:i:s" }}</td>
+                                <td>
+                                    <div href="#" data-url="#" class="btn btn-sm btn-danger del-btn">开始更新</div>
+                                    <div href="#" data-url="#" class="btn btn-sm btn-info detail-btn">详情</div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <div>
+                <ul class="pagination pagination-sm no-margin pull-right">
+                </ul>
+                <!-- /.box -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block js %}
+    <script>
+        $("#menu_issue").addClass("active");
+        $("#issue").addClass("active");
+
+        <!--文件上传-->
+        $('.file-btn').click(function () {
+            ui.box({
+                title: '文件上传',
+                remote: '{% url 'createfile' %}'
+            })
+        });
+
+        <!--git更新-->
+        $(".git-btn").on("click", function () {
+            ui.box({
+                "title": "git更新",
+                "remote": "{% url 'creategit' %}"
+            })
+        })
+    </script>
+{% endblock %}

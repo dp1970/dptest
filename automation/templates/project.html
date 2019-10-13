@@ -1,0 +1,112 @@
+{% extends 'master/base.html' %}
+{% block body %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <div class="btn btn-sm btn-success btn-add">添加项目</div>
+                    </h3>
+                    <form action="" method="get" class="pull-right">
+                        <div class="box-tools">
+                            <div class="input-group input-group-sm hidden-xs" style="width: 150px;">
+                                <input type="text" name="table_search" class="form-control pull-right"
+                                       placeholder="Search">
+
+                                <div class="input-group-btn">
+                                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>项目名</th>
+                            <th>责任人</th>
+                            <th>项目目录</th>
+                            <th>git地址</th>
+                            <th>域名</th>
+                            <th>语言</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for foo in project_obj %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ foo.name }}</td>
+                                <td>{% for v in foo.boss.all %}
+                                    {{ v.name }}
+                                {% endfor %}
+                                </td>
+                                <td>{{ foo.path }}</td>
+                                <td>{{ foo.git_path }}</td>
+                                <td>{{ foo.domain }}</td>
+                                <td>{{ foo.get_language_display }}</td>
+                                <td>{{ foo.get_status_display }}</td>
+                                <td>
+                                    <button data-url="{% url 'projectedit' foo.pk %}"
+                                            class="btn btn-warning btn-sm btn-edit">编辑
+                                    </button>
+                                    <button data-url="{% url 'projectdel' foo.pk %}"
+                                            class="btn btn-danger btn-sm btn-del">删除
+                                    </button>
+                                    <button data-url="{% url 'projectinfo' foo.name %}"
+                                            class="btn btn-success btn-sm btn-details">详情
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $("#project").addClass("active");
+        $('.btn-add').click(function () {
+            ui.box(
+                {
+                    'title': '添加项目',
+                    'remote': "{% url 'projectadd' %}",
+                }
+            )
+        });
+        $('.btn-edit').click(function () {
+            ui.box(
+                {
+                    'title': '编辑用户',
+                    'remote': $(this).attr('data-url'),
+                }
+            )
+        });
+        $('.btn-del').click(function () {
+            var url = $(this).attr('data-url');
+            ui.confirm('确认要删除吗?', function () {
+                Net.get({
+                    url: url,
+                    reload: true,
+                })
+            })
+        });
+        $('.btn-details').click(function () {
+            var url = $(this).attr('data-url');
+            ui.box({
+                'title': '项目详情',
+                'remote': url,
+            })
+        })
+    </script>
+{% endblock %}

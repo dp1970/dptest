@@ -1,0 +1,29 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <form id="initform" novalidate>
+                {% csrf_token %}
+                {% for field in form_obj %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        <span class="text-danger">{{ field.errors.0 }}</span>
+                    </div>
+                {% endfor %}
+                <p class="wait pull-right" style="margin-top: 10px"></p>
+                <input type="button" class="btn btn-success pull-right push" value="提交">
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.push').click(function () {
+        var url = "{% url 'initedit' pk %}";
+        Net.post({
+            url:url,
+            data:$('#initform').serialize(),
+            go:"{% url 'init' %}"
+        })
+    })
+</script>
