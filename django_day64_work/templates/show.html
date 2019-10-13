@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>show</title>
+    <link rel="stylesheet" href="{% static '/bootstrap-3.3.7-dist/css/bootstrap.min.css' %}">
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-xs-6">
+            <div>
+                <h3>查看书籍</h3>
+            </div>
+            <div class="col-md-4 col-md-offset-2">
+                <a href="{% url 'add' %}">
+                    <button id="add" type="button" class="btn btn-primary">添加书籍</button>
+                </a>
+            </div>
+            <div class="col-md-8 col-md-offset-2">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>书籍名称</th>
+                            <th>价格</th>
+                            <th>出版社</th>
+                            <th>作者</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for book in book_list %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ book.name }}</td>
+                            <td>{{ book.price }}</td>
+                            <td>{{ book.publish__name }}</td>
+                            <td>{{ book.author__name }}</td>
+                            <td><a href=""><button type="button" class="btn btn-warning">编辑</button></a>
+{#                            <a href="{% url 'dele' book.id %}"><button type="button" class="btn btn-danger">删除</button></a>#}
+                                <a href=""><button type="button" class="btn btn-danger">ajax删除</button></a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="{% static 'jquery-3.4.1.js' %}"></script>
+<script src="{% static '/bootstrap-3.3.7-dist/js/bootstrap.min.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>edibook</title>
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.min.css' %}">
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-xs-6">
+            <div>
+                <h3>编辑书籍</h3>
+            </div>
+            <div class="col-md-8 col-md-offset-2">
+                <form action="{% url 'edi_book' obj.pk %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="bookname">书籍名称</label>
+                        <input type="text" class="form-control" id="bookname" placeholder="一品三国" name="name" value="{{ obj.book_name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="bookprice">价格</label>
+                        <input type="text" class="form-control" id="bookprice" placeholder="20" name="price" value="{{ obj.book_price }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="publish">出版社</label>
+                        <input type="text" class="form-control" id="publish" placeholder="卖不出去" name="press" value="{{ obj.press }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="author">作者</label>
+                        <input type="text" class="form-control" id="press" placeholder="卖不出去" name="press" value="{{ obj.press }}">
+                    </div>
+                    <button type="submit" class="btn btn-success pull-right">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src={% static "jquery-3.4.1.min.js" %}></script>
+<script src={% static "bootstrap-3.3.7-dist/js/bootstrap.js" %}></script>
+
+</body>
+</html>
